@@ -1,23 +1,32 @@
 
-var debug = require('debug')('encoder');
+var debug = require('debug')('main app');
 var config = require('config');
-var express = require('express');
 var ffmpeg = require('fluent-ffmpeg');
 
-
+var express = require('express');
 
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
+
 var modCapture = require('./lib/capture');
 var modEncoder = require('./lib/encode');
 
-
-app.use(express.static(__dirname + '/public'));
-
-app.get('/', function(req, res) {
-  res.send('index.html');
+io.on('connection', function (socket) {
+  socket.emit('init', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    debug(data);
+  });
 });
 
-app.listen(4000);
+app.use(express.static(__dirname + '/frontend-src'));
+
+// app.get('/', function(req, res) {
+//   res.send('index.html');
+// });
+
+server.listen(4000);
 
 // childProc.stdout.on('data', function (data) {
 //   debug('stdout: ' + data);
