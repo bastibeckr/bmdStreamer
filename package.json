@@ -1,0 +1,32 @@
+{
+  "name": "sat1-node-stream",
+  "version": "1.0.0",
+  "description": "wrapper for ffmpeg / bmdtools",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/grunt ci"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@mm.bastibeckr.com:sat1_node_stream"
+  },
+  "keywords": [],
+  "author": "Sebastian Becker <bastibeckr@gmail.com>",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "config": "^1.0.0",
+    "debug": "^1.0.4",
+    "express": "^4.6.1",
+    "fluent-ffmpeg": "^2.0.0-rc1",
+    "lodash": "^2.4.1",
+  },
+  "devDependencies": {
+    "expect.js": "~0.2.0",
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt": "~0.4.1",
+    "grunt-mocha-cli": "~1.1.0",
+    "grunt-complexity": "~0.1.3",
+    "grunt-cli": "~0.1.9"
+  }
+}
