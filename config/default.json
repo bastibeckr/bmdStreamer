@@ -14,5 +14,33 @@
                 "-"
             ]
         }
+    },
+    "encoder": {
+        "outputOptions": {
+            "-profile:v main",
+            "-preset medium",
+            "-crf 29",
+            "-tune zerolatency",
+            "-g 30",
+            "-ab 96000",
+            "-ar 44100",
+            "-ac 2",
+            "-t 10",
+            "-y"
+        }
+        "proc":  {
+            "name": "ffmpeg",
+            "args": [
+                "-re",
+                "-i", "rtmp://stream.sat1bayern.de/vod_special/mp4:news_update.m4v",
+                "-c:v", "libx264",
+                "-vf", "scale=720x576",
+                "-c:a", "pcm_s16le",
+                "-ar", "48000",
+                "-f", "nut",
+                "-y",
+                "-"
+            ]
+        }
     }
 }

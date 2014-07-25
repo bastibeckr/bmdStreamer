@@ -30,18 +30,17 @@ app.listen(4000);
 // var srcCmd = 'bmdcapture -m 8 -C 0 -A 2 -V 4 -M 16 -F nut -f pipe:1';
 
 
-var captureProc = modCapture.startCapture();
+// var captureProc = modCapture.startCapture();
+// var encodeCmd   = modEncoder.startEncoding( captureProc.stdout );
 
-var encodeCmd   = modEncoder.startEncoding( captureProc.stdout );
-
-encodeCmd.on('progress', function(prog){
-    debug('Progress', prog.timemark);
-})
-.on('end', function(){
-    debug('Finished processing');
-    captureProc.kill('SIGKILL');
-})
-.run();
+// encodeCmd.on('progress', function(prog){
+//     debug('Progress', prog.timemark);
+// })
+// .on('end', function(){
+//     debug('Finished processing');
+//     captureProc.kill('SIGKILL');
+// })
+// .run();
 
 
 
