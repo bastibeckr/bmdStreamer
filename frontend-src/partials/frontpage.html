@@ -1,8 +1,13 @@
-    <div class="container">
-
-      <div class="starter-template">
-        <h1>Bootstrap starter template</h1>
+<div class="starter-template">
+        <h1>studio2010 bmdStream</h1>
         <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-      </div>
 
-    </div><!-- /.container -->
+        <button type="button" class="btn btn-primary" ng-model="singleModel" ng-click="clickStart()">
+                Start Stream
+        </button>
+
+        <pre>{{ appData | json }}</pre>
+
+        <img ng-src="{{ previewImgSrc }}" id="capture-preview"></img>
+</div>
+

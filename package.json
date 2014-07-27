@@ -14,11 +14,13 @@
   "author": "Sebastian Becker <bastibeckr@gmail.com>",
   "license": "BSD-3-Clause",
   "dependencies": {
+    "backbone": "^1.1.2",
     "config": "^1.0.0",
     "debug": "^1.0.4",
     "express": "^4.6.1",
     "fluent-ffmpeg": "^2.0.0-rc1",
     "lodash": "^2.4.1",
+    "q": "^1.0.1",
     "socket.io": "^1.0.6"
   },
   "devDependencies": {

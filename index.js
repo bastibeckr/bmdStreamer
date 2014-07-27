@@ -1,46 +1,52 @@
 
-var debug = require('debug')('main app');
-var config = require('config');
+
+var debug = require('debug')('mainapp');
+var EventEmitter = require("events").EventEmitter;
+var fs = require('fs');
 var ffmpeg = require('fluent-ffmpeg');
+var _ = require('lodash');
 
-var express = require('express');
 
-var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-
+var config = require('config');
 
 var modCapture = require('./lib/capture');
 var modEncoder = require('./lib/encode');
+var modBrowser = require('./lib/browser');
 
-io.on('connection', function (socket) {
-  socket.emit('init', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    debug(data);
-  });
+modBrowser.start();
+
+
+function makePreview(){
+    var captureProc = modCapture.startCapture();
+    if( !captureProc.stdout ){
+        debug('stop generation of preview because no capture has no stdout.');
+        return false;
+    }
+    var previewEnc  = modEncoder.encodePreview( captureProc.stdout );
+    previewEnc
+    .on('start', function(commandLine) {
+        debug('Spawned Ffmpeg with command: ' + commandLine);
+    })
+    .on('end', function(){
+        fs.readFile('screenshot.png', function(err, buffer){
+            var socketEventName = 'preview-img';
+            var base64Image = new Buffer(buffer, 'binary').toString('base64');
+
+            modBrowser.events.emit('app-to-browser', socketEventName, { base64: 'data:image/png;base64,'+base64Image });
+        });
+        debug('Finished preview');
+        captureProc.kill('SIGKILL');
+    }).on('error', function(){
+        debug('Preview error', arguments);
+        captureProc.kill('SIGKILL');
+    }).run();
+};
+
+modBrowser.events.on('browser-to-app', function(data){
+    debug('APP received web-control - event', data);
+    makePreview();
 });
 
-app.use(express.static(__dirname + '/frontend-src'));
-
-// app.get('/', function(req, res) {
-//   res.send('index.html');
-// });
-
-server.listen(4000);
-
-// childProc.stdout.on('data', function (data) {
-//   debug('stdout: ' + data);
-// });
-
-// childProc.stderr.on('data', function (data) {
-//   debug('stderr: ' + data);
-// });
-
-// var srcCmd = 'bmdcapture -m 8 -C 0 -A 2 -V 4 -M 16 -F nut -f pipe:1';
-
-
-// var captureProc = modCapture.startCapture();
-// var encodeCmd   = modEncoder.startEncoding( captureProc.stdout );
 
 // encodeCmd.on('progress', function(prog){
 //     debug('Progress', prog.timemark);
@@ -50,11 +56,6 @@ server.listen(4000);
 //     captureProc.kill('SIGKILL');
 // })
 // .run();
-
-
-
-
-
 
 
 

@@ -4,7 +4,7 @@
             "name": "ffmpeg",
             "args": [
                 "-re",
-                "-i", "rtmp://stream.sat1bayern.de/vod_special/mp4:news_update.m4v",
+                "-i", "rtmp://stream.sat1bayern.de/live/mp4:Sat1Schedule_01",
                 "-c:v", "libx264",
                 "-vf", "scale=720x576",
                 "-c:a", "pcm_s16le",
@@ -28,5 +28,9 @@
             "-t 10",
             "-y"
         ]
+    },
+    "browser": {
+        "enabled": true,
+        "port": 4000
     }
 }
