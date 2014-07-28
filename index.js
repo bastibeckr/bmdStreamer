@@ -34,7 +34,6 @@ function makePreview() {
             captureProc.kill('SIGKILL');
         },
         function(err) {
-            console.log('There was an error while encoding the preview!', err);
             captureProc.kill('SIGKILL');
         }
     ).done();

@@ -1,11 +1,11 @@
 {
     "capture": {
-        "proc":  {
+        "proc": {
             "name": "ffmpeg",
             "args": [
                 "-re",
                 "-i", "rtmp://stream.sat1bayern.de/live/mp4:Sat1Schedule_01",
-                "-c:v", "libx264",
+                "-c:v", "libz264",
                 "-vf", "scale=720x576",
                 "-c:a", "pcm_s16le",
                 "-ar", "48000",
