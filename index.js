@@ -1,5 +1,3 @@
-
-
 var debug = require('debug')('mainapp');
 var EventEmitter = require("events").EventEmitter;
 var fs = require('fs');
@@ -15,37 +13,71 @@ var modBrowser = require('./lib/browser');
 
 modBrowser.start();
 
-
-function makePreview(){
+function makePreview() {
     var captureProc = modCapture.startCapture();
-    if( !captureProc.stdout ){
+    if (!captureProc.stdout) {
         debug('stop generation of preview because no capture has no stdout.');
         return false;
     }
-    var previewEnc  = modEncoder.encodePreview( captureProc.stdout );
-    previewEnc
-    .on('start', function(commandLine) {
-        debug('Spawned Ffmpeg with command: ' + commandLine);
-    })
-    .on('end', function(){
-        fs.readFile('screenshot.png', function(err, buffer){
-            var socketEventName = 'preview-img';
-            var base64Image = new Buffer(buffer, 'binary').toString('base64');
+    modEncoder.encodePreview(captureProc).then(
+        function(data) {
+            debug('preview encoder: on success');
+            fs.readFile('screenshot.png', function(err, buffer) {
+                var socketEventName = 'preview-img';
+                var base64Image = new Buffer(buffer, 'binary').toString('base64');
+                // modBrowser.events.emit('app-to-browser', 'preview-img', { image: true, buffer: buffer });
+                modBrowser.events.emit('app-to-browser', socketEventName, {
+                    base64: 'data:image/png;base64,' + base64Image
+                });
+            });
+            captureProc.kill('SIGKILL');
+        },
+        function(err) {
+            console.log('There was an error while encoding the preview!', err);
+            captureProc.kill('SIGKILL');
+        }
+    ).done();
 
-            modBrowser.events.emit('app-to-browser', socketEventName, { base64: 'data:image/png;base64,'+base64Image });
-        });
-        debug('Finished preview');
-        captureProc.kill('SIGKILL');
-    }).on('error', function(){
-        debug('Preview error', arguments);
-        captureProc.kill('SIGKILL');
-    }).run();
 };
 
-modBrowser.events.on('browser-to-app', function(data){
+
+function startStreaming() {
+    if (modEncoder.publicData.get('running')) {
+        debug('IS RUNNING!', modEncoder);
+        modEncoder.stopEncoding();
+        return false;
+    }
+    var captureProc = modCapture.startCapture();
+    if (!captureProc.stdout) {
+        debug('stop generation of preview because no capture has no stdout.');
+        return false;
+    }
+    modEncoder.startEncoding(captureProc).then(
+        function(data) {
+            debug('streaming encoder: on success');
+            captureProc.kill('SIGKILL');
+        },
+        function(err) {
+            debug('streaming encoder: on error', err);
+            captureProc.kill('SIGKILL');
+        }
+    ).done();
+}
+
+modBrowser.events.on('browser-to-app', function(data) {
     debug('APP received web-control - event', data);
-    makePreview();
+    switch (data.action) {
+        case 'preview':
+            makePreview();
+            break;
+        case 'streaming':
+            startStreaming();
+            break;
+    }
+
 });
+
+
 
 
 // encodeCmd.on('progress', function(prog){
@@ -59,6 +91,6 @@ modBrowser.events.on('browser-to-app', function(data){
 
 
 
-module.exports = function () {
+module.exports = function() {
 
 };

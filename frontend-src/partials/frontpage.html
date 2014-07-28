@@ -1,13 +1,55 @@
 <div class="starter-template">
-        <h1>studio2010 bmdStream</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
 
-        <button type="button" class="btn btn-primary" ng-model="singleModel" ng-click="clickStart()">
-                Start Stream
-        </button>
+        <div class="row intro">
+            <h1>Live-Stream - Control</h1>
+            <p class="lead">v1.0.0</p>
+        </div>
 
-        <pre>{{ appData | json }}</pre>
+        <div class="row">
+            <div class="col-xs-6">
+                <pre>Frames encoded: {{ appData.encoder.progress.frames }}
+Current FPS:    {{ appData.encoder.progress.currentFps }}
+Current kBps:   {{ appData.encoder.progress.currentKbps }}
+Target Size:    {{ appData.encoder.progress.targetSize }}
+Timestamp:      {{ appData.encoder.progress.timemark }}</pre>
+            </div>
+          <div class="col-xs-6">
+                <ul class="list-group">
+                  <li class="list-group-item">
+                    Encoder&nbsp;
+                    <span class="label" ng-class="{'label-success': appData.encoder.running, 'label-default': !appData.encoder.running}">{{ appData.encoder.running ? 'läuft' : 'gestoppt' }}</span>
+                  </li>
+                  <li class="list-group-item">
+                    Capture-Prozess&nbsp;
+                    <span class="label" ng-class="{'label-success': appData.encoder.running, 'label-default': !appData.encoder.running}">{{ appData.encoder.running ? 'läuft' : 'gestoppt' }}</span>
+                  </li>
+                </ul>
+           </div>
+        </div>
 
-        <img ng-src="{{ previewImgSrc }}" id="capture-preview"></img>
+        <div class="row">
+            <p class="col-xs-12">
+                <button type="button" class="btn btn-primary btn-lg" ng-click="clickPreview()">Preview-Bild laden</button>
+                <button
+                    type="button"
+                    class="btn btn-lg"
+                    ng-class="{'btn-danger': appData.encoder.running, 'btn-primary': !appData.encoder.running}"
+                    ng-click="clickStart()">
+                    <i class="fa fa-play" ng-class="{'fa-stop': appData.encoder.running, 'fa-play': !appData.encoder.running}"></i> Stream {{ appData.encoder.running ? 'stoppen' : 'starten' }}
+                </button>
+            </p>
+        </div>
+
+
+        <div class="row">
+            <div class="col-xs-12">
+                <pre>{{ appData | json }}</pre>
+            </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-6"><img ng-src="{{ previewImgSrc }}" id="capture-preview"></img></div>
+          <div class="col-xs-6"></div>
+        </div>
+
 </div>
-
