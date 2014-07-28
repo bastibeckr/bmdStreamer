@@ -41,9 +41,15 @@ Timestamp:      {{ appData.encoder.progress.timemark }}</pre>
         </div>
 
 
+
         <div class="row">
-            <div class="col-xs-12">
-                <pre>{{ appData | json }}</pre>
+
+            <div class="col-xs-12 debug-tabs" >
+                <tabset type="tabs">
+                    <tab heading="Options"><pre>{{ appData | json }}</pre></tab>
+                    <tab heading="Console"><pre></pre></tab>
+                </tabset>
+
             </div>
         </div>
 

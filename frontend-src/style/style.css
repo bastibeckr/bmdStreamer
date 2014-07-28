@@ -10,3 +10,8 @@ body {
 .starter-template .intro{
     text-align: center;
 }
+
+.debug-tabs pre{
+    max-height: 300px;
+    overflow: auto;
+}

@@ -1,5 +1,6 @@
-var debug = require('debug')('mainapp');
+var debug = require('debug')('sat1-node-stream:mainapp');
 var EventEmitter = require("events").EventEmitter;
+var winston = require('winston');
 var fs = require('fs');
 var ffmpeg = require('fluent-ffmpeg');
 var _ = require('lodash');
@@ -9,7 +10,7 @@ var config = require('config');
 
 var modCapture = require('./lib/capture');
 var modEncoder = require('./lib/encode');
-var modBrowser = require('./lib/browser');
+var modBrowser = require('./lib/webserver');
 
 modBrowser.start();
 
