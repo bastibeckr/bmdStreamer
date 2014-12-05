@@ -31,10 +31,11 @@ function makePreview() {
                     base64: 'data:image/png;base64,' + base64Image
                 });
             });
-            captureProc.kill('SIGKILL');
+            // captureProc.kill('SIGKILL');
         },
         function(err) {
-            captureProc.kill('SIGKILL');
+            debug('preview encoder: on error');
+            // captureProc.kill('SIGKILL');
         }
     ).done();
 
@@ -43,7 +44,7 @@ function makePreview() {
 
 function startStreaming() {
     if (modEncoder.publicData.get('running')) {
-        debug('IS RUNNING!', modEncoder);
+        debug('Will stop encoder now because Encoder is already running.')
         modEncoder.stopEncoding();
         return false;
     }
