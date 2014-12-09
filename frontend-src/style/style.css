@@ -15,3 +15,8 @@ body {
     max-height: 300px;
     overflow: auto;
 }
+
+.debug-tabs .log-lines{
+    padding-left: 0px;
+}
+

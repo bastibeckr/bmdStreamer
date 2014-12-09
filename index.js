@@ -4,6 +4,7 @@ var winston = require('winston');
 var fs = require('fs');
 var ffmpeg = require('fluent-ffmpeg');
 var _ = require('lodash');
+var through = require('through');
 
 
 var config = require('config');
@@ -14,6 +15,11 @@ var modBrowser = require('./lib/webserver');
 
 modBrowser.start();
 
+var throughStream = new through();
+
+
+
+
 function makePreview() {
     var captureProc = modCapture.startCapture();
     if (!captureProc.stdout) {
@@ -23,7 +29,8 @@ function makePreview() {
     modEncoder.encodePreview(captureProc).then(
         function(data) {
             debug('preview encoder: on success');
-            fs.readFile('screenshot.png', function(err, buffer) {
+            fs.readFile('screenshot-2.png', function(err, buffer) {
+
                 var socketEventName = 'preview-img';
                 var base64Image = new Buffer(buffer, 'binary').toString('base64');
                 // modBrowser.events.emit('app-to-browser', 'preview-img', { image: true, buffer: buffer });
@@ -39,12 +46,12 @@ function makePreview() {
         }
     ).done();
 
-};
+}
 
 
 function startStreaming() {
     if (modEncoder.publicData.get('running')) {
-        debug('Will stop encoder now because Encoder is already running.')
+        debug('Will stop encoder now because Encoder is already running.');
         modEncoder.stopEncoding();
         return false;
     }

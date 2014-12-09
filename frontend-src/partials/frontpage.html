@@ -47,14 +47,18 @@ Timestamp:      {{ appData.encoder.progress.timemark }}</pre>
             <div class="col-xs-12 debug-tabs" >
                 <tabset type="tabs">
                     <tab heading="Options"><pre>{{ appData | json }}</pre></tab>
-                    <tab heading="Console"><pre></pre></tab>
+                    <tab heading="Console">
+
+                    <pre><span ng-repeat="line in logs"><span ng-bind-html="line | ansiToHtml"></span><br /></span></pre>
+
+                    </tab>
                 </tabset>
 
             </div>
         </div>
 
         <div class="row">
-          <div class="col-xs-6"><img ng-src="{{ previewImgSrc }}" id="capture-preview"></img></div>
+          <div class="col-xs-6"><img ng-src="{{ previewImgSrc }}" id="capture-preview" /></div>
           <div class="col-xs-6"></div>
         </div>
 

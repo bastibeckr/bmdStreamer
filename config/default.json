@@ -6,10 +6,10 @@
                 "-re",
                 "-i", "rtmp://stream.sat1bayern.de/live/mp4:Sat1Schedule_01",
                 "-c:v", "libx264",
-                "-vf", "scale=720x576",
+                "-vf",  "scale=720x576",
                 "-c:a", "pcm_s16le",
-                "-ar", "48000",
-                "-f", "nut",
+                "-ar",  "48000",
+                "-f",   "nut",
                 "-y",
                 "-"
             ]

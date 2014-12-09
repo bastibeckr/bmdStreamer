@@ -14,6 +14,7 @@
   "author": "Sebastian Becker <bastibeckr@gmail.com>",
   "license": "BSD-3-Clause",
   "dependencies": {
+    "ansi_up": "^1.1.2",
     "backbone": "^1.1.2",
     "config": "^1.0.0",
     "debug": "^1.0.4",
