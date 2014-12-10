@@ -18,5 +18,11 @@ body {
 
 .debug-tabs .log-lines{
     padding-left: 0px;
+    font-size: 80%;
+    line-height: 0.8;
+}
+
+#capture-preview{
+    max-width: 100%;
 }
 

@@ -20,9 +20,12 @@
     "debug": "^1.0.4",
     "express": "^4.6.1",
     "fluent-ffmpeg": "^2.0.0-rc1",
+    "fork-stream": "0.0.4",
     "lodash": "^2.4.1",
     "q": "^1.0.1",
     "socket.io": "^1.0.6",
+    "socket.io-stream": "^0.6.0",
+    "through2": "^0.6.3",
     "winston": "^0.7.3"
   },
   "devDependencies": {

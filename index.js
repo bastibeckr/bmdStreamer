@@ -1,24 +1,29 @@
+var modIntercept = require('./streamtest');
+var throughStream = modIntercept.intercept();
+
+
 var debug = require('debug')('sat1-node-stream:mainapp');
 var EventEmitter = require("events").EventEmitter;
 var winston = require('winston');
 var fs = require('fs');
 var ffmpeg = require('fluent-ffmpeg');
 var _ = require('lodash');
-var through = require('through');
 
 
 var config = require('config');
 
+
+
 var modCapture = require('./lib/capture');
 var modEncoder = require('./lib/encode');
 var modBrowser = require('./lib/webserver');
-
-modBrowser.start();
-
-var throughStream = new through();
+var modPlayout = require('./lib/playout');
 
 
 
+modBrowser.start(throughStream);
+
+modPlayout.updateDevices();
 
 function makePreview() {
     var captureProc = modCapture.startCapture();
@@ -38,11 +43,11 @@ function makePreview() {
                     base64: 'data:image/png;base64,' + base64Image
                 });
             });
-            // captureProc.kill('SIGKILL');
+            captureProc.kill('SIGKILL');
         },
         function(err) {
             debug('preview encoder: on error');
-            // captureProc.kill('SIGKILL');
+            captureProc.kill('SIGKILL');
         }
     ).done();
 

@@ -105,7 +105,7 @@ angular.module('streamCtrlFilters', [])
 
     var self = this;
     nums.map(function (num_str) {
-
+      // console.log('NUM: ', num_str);
       var num = parseInt(num_str);
 
       if (isNaN(num) || num === 0) {
@@ -113,10 +113,14 @@ angular.module('streamCtrlFilters', [])
         self.bright = 0;
       } else if (num === 1) {
         self.bright = 1;
+      } else if (num === 39) {
+        self.fg = null;
       } else if ((num >= 30) && (num < 38)) {
-        self.fg = ANSI_COLORS[self.bright][(num % 10)][key];
+        self.fg = ANSI_COLORS[0][(num % 10)][key];
       } else if ((num >= 40) && (num < 48)) {
         self.bg = ANSI_COLORS[0][(num % 10)][key];
+      } else if ((num >= 90) && (num < 98)) {
+        self.fg = ANSI_COLORS[self.bright][(num % 10)][key];
       }
     });
 

@@ -21,9 +21,16 @@ angular.module('streamCtrlControllers', ['ngRoute'])
         console.log('Got data', data);
     });
 
-    ctrlSocket.on('log', function(data){
-        $scope.logs.push(data);
+    ctrlSocket.on('gotData', function(data){
+        var logData = data.chunk.split('\n');
+        logData.forEach(function(entry, index){
+            if(!entry.trim().length){
+                logData.splice(index, 1);
+            }
+        });
+        $scope.logs = $scope.logs.concat(logData);
     });
+
 
     ctrlSocket.on('preview-img', function(data) {
         console.log('got preview-img', data);
