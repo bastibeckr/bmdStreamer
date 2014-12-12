@@ -29,6 +29,7 @@
         "f":            "pipe:0"
     ffmpeg:
         toBmdPlay:
+            "dn":       ""
             "c:v":      "rawvideo"
             "pix_fmt":  "uyvy422"
             "c:a":      "pcm_s16le"

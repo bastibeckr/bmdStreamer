@@ -12,6 +12,7 @@ body {
 }
 
 .debug-tabs pre{
+    height: 300px;
     max-height: 300px;
     overflow: auto;
 }
@@ -28,4 +29,9 @@ body {
 
 label.form-control{
     font-weight: normal;
+}
+
+#console{
+    background-color: #444;
+    color: #ddd;
 }

@@ -78,7 +78,7 @@ function startStreaming() {
         return false;
     }
 
-    var isUrl = modCapture.captureModel.get('isUrl');
+    isUrl = modCapture.captureModel.get('isUrl');
 
     // Source is URL.
     // No separate Capture process needed.
@@ -92,7 +92,7 @@ function startStreaming() {
         debug('Output options:', outputOptions);
         baseCommand
             .addInput(modCapture.captureModel.get('srcUrl'))
-            .addInputOptions('-re')
+            .addInputOptions(['-re'])
             .addOutputOptions( util.paramsObjectToArray(outputOptions) );
 
 
@@ -111,7 +111,15 @@ function startStreaming() {
         debug('Start streaming: Target is BMD.');
         playoutProcess = modPlayout.getBmdPlayProcess();
 
-        baseCommand.pipe(playoutProcess.stdin);
+        var ffstream = baseCommand.pipe();
+
+
+
+        ffstream.on('data', function(chunk){
+            playoutProcess.stdin.write(chunk);
+        });
+
+
 
 
     } else {
@@ -123,7 +131,10 @@ function startStreaming() {
             },
             function(err) {
                 debug('streaming encoder: on error', err);
-                captureProc.kill('SIGKILL');
+                if( captureProc && captureProc.kill ){
+                    captureProc.kill('SIGKILL');
+                }
+
             }
         ).done();
 

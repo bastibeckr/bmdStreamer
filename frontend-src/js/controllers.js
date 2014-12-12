@@ -11,16 +11,21 @@ angular.module('streamCtrlControllers', ['ngRoute'])
 
     $scope.appData = {};
     $scope.logs = [];
+    $scope.settings = {};
 
     ctrlSocket.on('data', function(data){
+        console.log('Got data from server', data, $scope.appData);
         angular.extend($scope.appData, data);
-        console.log('Got data',data, $scope.appData);
+
     });
 
-    ctrlSocket.on('data', function(data){
-        angular.extend($scope.appData, data);
-        console.log('Got data', data);
+
+    ctrlSocket.on('settings-change', function(data){
+        // $scope.settings = data;
+        console.log('Got SETTINGS from server', data, $scope.settings);
+        angular.extend($scope.settings, data);
     });
+
 
     ctrlSocket.on('gotData', function(data){
         var logData = data.chunk.split('\n');

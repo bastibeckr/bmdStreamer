@@ -3,8 +3,9 @@ var App = angular.module('streamCtrl', [
     'ngRoute',
     'btford.socket-io',
     'ui.bootstrap',
+    'streamCtrlDirectives',
     'streamCtrlControllers',
-    'streamCtrlFilters'
+    'streamCtrlFilters',
 
 ])
 .config(['$routeProvider', function($routeProvider) {
