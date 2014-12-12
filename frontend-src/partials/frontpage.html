@@ -6,7 +6,7 @@
         </div>
 
         <div class="row">
-            <div class="col-xs-4">
+            <div class="col-xs-3">
                 <ul class="list-group">
                     <li class="list-group-item">
                       Encoder&nbsp;
@@ -16,25 +16,42 @@
                       Capture-Prozess&nbsp;
                       <span class="label" ng-class="{'label-success': appData.capture.running, 'label-default': !appData.capture.running}">{{ appData.capture.running ? 'läuft' : 'gestoppt' }}</span>
                     </li>
-                    <li class="list-group-item">Frames encoded: {{ appData.encoder.progress.frames }}</li>
-                    <li class="list-group-item">Current FPS:    {{ appData.encoder.progress.currentFps }}</li>
-                    <li class="list-group-item">Current kBps:   {{ appData.encoder.progress.currentKbps }}</li>
-                    <li class="list-group-item">Target Size:    {{ appData.encoder.progress.targetSize }}</li>
-                    <li class="list-group-item">Timestamp:      {{ appData.encoder.progress.timemark }}</li>
+                    <li class="list-group-item">Frames encoded: <code>{{ appData.encoder.progress.frames }}</code></li>
+                    <li class="list-group-item">Current FPS:    <code>{{ appData.encoder.progress.currentFps }}</code></li>
+                    <li class="list-group-item">Current kBps:   <code>{{ appData.encoder.progress.currentKbps }}</code></li>
+                    <li class="list-group-item">Target Size:    <code>{{ appData.encoder.progress.targetSize }}</code></li>
+                    <li class="list-group-item">Timestamp:      <code>{{ appData.encoder.progress.timemark }}</code></li>
                 </ul>
 
 
             </div>
-            <div class="col-xs-4">
+            <div class="col-xs-3">
                 <ul class="list-group">
                     <li class="list-group-item"></li>
                 </ul>
             </div>
 
-            <div class="col-xs-4">
+            <div class="col-xs-6">
                 <ul class="list-group">
                     <li class="list-group-item">
                         <img ng-src="{{ previewImgSrc }}" id="capture-preview" />
+                    </li>
+                    <li class="list-group-item">
+                        <tabset justified="true">
+                            <tab heading="Format">
+                                <dl class="dl-horizontal" style="word-wrap: break-word;">
+                                    <dt ng-repeat-start="(key, value) in appData.capture.ffprobeInfo.format">{{key}}</dt>
+                                    <dd ng-repeat-end>{{value}}</dd>
+                                </dl>
+                            </tab>
+                            <tab heading="Stream #{{stream.index}}" ng-repeat="stream in appData.capture.ffprobeInfo.streams">
+                                <dl class="dl-horizontal" style="word-wrap: break-word;">
+                                    <dt ng-repeat-start="(key, value) in stream">{{key}}</dt>
+                                    <dd ng-repeat-end>{{value}}</dd>
+                                </dl>
+                            </tab>
+                        </tabset>
+
                     </li>
                 </ul>
             </div>
@@ -45,11 +62,13 @@
 
                   <li class="list-group-item">
                     <h4>Eingänge / Capture</h4>
-                    <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="device in appData.devices">
-
-                        </li>
-                    </ul>
+                        <div class="input-group">
+                              <span class="input-group-addon">
+                                <input type="radio" name="input-device" ng-model="settings.capture.device" id="radio-select-playout-url" value="url" >
+                              </span>
+                              <input type="text" class="form-control" placeholder="rtmp(s)://" ng-model="settings.capture.url">
+                              <span class="input-group-addon"><span class="glyphicon glyphicon-cloud-download"></span></span>
+                        </div><!-- /input-group -->
                   </li>
 
                 </ul>
@@ -57,31 +76,42 @@
             <div class="col-xs-6">
                 <ul class="list-group">
 
-                  <li class="list-group-item">
+                <li class="list-group-item">
                     <h4>Ausgang / Playout</h4>
-                    <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="device in appData.devices">
 
-                            <div class="input-group">
-                                  <span class="input-group-addon">
-                                    <input type="radio" name="encoder-option" ng-model="appData.playoutDevice" id="radio-{{device.index}}" value="{{device.index}}" >
-                                  </span>
-                                  <input type="text" class="form-control" value="{{device.name}}">
+                        <div class="input-group" ng-repeat="avDevice in appData.devices">
 
-                            </div><!-- /input-group -->
-                        </li>
-                        <li class="list-group-item input-group">
-                            <div class="input-group">
-                                  <span class="input-group-addon">
-                                    <input type="radio" name="encoder-option" ng-model="appData.playoutDevice" id="radio-{{device.index}}" value="{{device.index}}" >
-                                  </span>
-                                  <input type="text" class="form-control">
-                            </div><!-- /input-group -->
-                        </li>
-                    </ul>
-                  </li>
+                              <span class="input-group-addon">
+                                <input type="radio" name="playout-device"  ng-model="$parent.settings.playout.device" id="settings-playout-device-{{avDevice.slug}}" ng-value="avDevice.index" >
+                              </span>
+                              <label class="form-control"  for="settings-playout-device-{{avDevice.slug}}"><span>{{avDevice.name}}</span></label>
+                              <span class="input-group-addon"><span class="glyphicon glyphicon-facetime-video"></span></span>
+                        </div>
 
-                </ul>
+
+
+                        <div class="input-group">
+                              <span class="input-group-addon">
+                                <input type="radio" name="playout-device" ng-model="settings.playout.device" id="radio-select-playout-url" value="url" >
+                              </span>
+                              <input type="text" class="form-control" placeholder="rtmp(s)://" ng-model="settings.playout.url">
+                              <span class="input-group-addon"><span class="glyphicon glyphicon-cloud-upload"></span></span>
+                        </div><!-- /input-group -->
+
+
+
+                </li>
+
+                <li class="list-group-item">
+                    <h4>Format</h4>
+                    <div ng-repeat="format in appData.devices[settings.playout.device].formats">
+                        <label  for="radio-select-playout-format-{{format.slug}}">
+                            <input type="radio" name="playout-format" ng-model="$parent.settings.playout.format" id="radio-select-playout-format-{{format.slug}}" ng-value="format.slug" >
+                            <span>{{format.name}}</span>
+                        </label>
+                    </div>
+                </li>
+
            </div>
         </div>
 
@@ -104,7 +134,7 @@
 
             <div class="col-xs-12 debug-tabs" >
                 <tabset type="tabs">
-                    <tab heading="Options"><pre>{{ appData | json }}</pre></tab>
+                    <tab heading="Options"><pre>{{ appData | json }}</pre><pre>{{ settings | json }}</pre></tab>
                     <tab heading="Console">
 
                     <pre><span ng-repeat="line in logs track by $index"><span ng-bind-html="line | ansiToHtml"></span><br /></span></pre>

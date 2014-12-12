@@ -1,0 +1,19 @@
+---
+  capture:
+    proc:
+      name: "bmdcapture"
+      args:
+        - "-m"
+        - "8"
+        - "-C"
+        - "0"
+        - "-A"
+        - "2"
+        - "-V"
+        - "4"
+        - "-M"
+        - "16"
+        - "-F"
+        - "nut"
+        - "-f"
+        - "pipe:1"

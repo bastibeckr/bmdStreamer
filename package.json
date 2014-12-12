@@ -21,6 +21,7 @@
     "express": "^4.6.1",
     "fluent-ffmpeg": "^2.0.0-rc1",
     "fork-stream": "0.0.4",
+    "js-yaml": "^3.2.3",
     "lodash": "^2.4.1",
     "q": "^1.0.1",
     "socket.io": "^1.0.6",

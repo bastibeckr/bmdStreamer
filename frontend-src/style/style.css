@@ -26,3 +26,6 @@ body {
     max-width: 100%;
 }
 
+label.form-control{
+    font-weight: normal;
+}

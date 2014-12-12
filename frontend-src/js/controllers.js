@@ -11,6 +11,7 @@ angular.module('streamCtrlControllers', ['ngRoute'])
 
     $scope.appData = {};
     $scope.logs = [];
+
     ctrlSocket.on('data', function(data){
         angular.extend($scope.appData, data);
         console.log('Got data',data, $scope.appData);
@@ -48,4 +49,12 @@ angular.module('streamCtrlControllers', ['ngRoute'])
         });
     };
 
+
+    $scope.$watch('settings', function(newValue, oldValue) {
+        console.log('Scope changed.', arguments);
+        ctrlSocket.emit('browser-to-app', {
+            settings: $scope.settings,
+            action: 'settings-change'
+        });
+    }, true);
 }]);
