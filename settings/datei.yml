@@ -4,5 +4,5 @@ capture:
   url: "rtmp://stream.sat1bayern.de/live/mp4:Sat1Schedule_01"
 playout:
   _name: playout
-  device: url
+  device: 0
   format: hd-1080i-59-94
