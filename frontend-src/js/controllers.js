@@ -27,14 +27,14 @@ angular.module('streamCtrlControllers', ['ngRoute'])
     });
 
 
-    ctrlSocket.on('gotData', function(data){
-        var logData = data.chunk.split('\n');
-        logData.forEach(function(entry, index){
-            if(!entry.trim().length){
-                logData.splice(index, 1);
-            }
-        });
-        $scope.logs = $scope.logs.concat(logData);
+    ctrlSocket.on('log', function(data){
+        // var logData = data.chunk.split('\n');
+        var maxLength = 100;
+        console.log('ON LOG', data);
+        $scope.logs.unshift( data.chunk );
+        if( $scope.logs.length > maxLength ){
+            $scope.logs.splice(-1, 1);
+        }
     });
 
 
@@ -54,6 +54,11 @@ angular.module('streamCtrlControllers', ['ngRoute'])
         });
     };
 
+    $scope.clickSave = function(){
+        ctrlSocket.emit('browser-to-app', {action: 'settings-save'}, function(){
+            console.log('BROWSER TO APP Callback', arguments);
+        });
+    }
 
     $scope.$watch('settings', function(newValue, oldValue) {
         console.log('Scope changed.', arguments);

@@ -170,7 +170,9 @@ angular.module('streamCtrlFilters', [])
   };
 
   return function(input){
-    return $sce.trustAsHtml(ansi_up.ansi_to_html( input ));
+    return $sce.trustAsHtml(ansi_up.ansi_to_html( input, {
+        use_classes: true
+    } ));
   };
 
 

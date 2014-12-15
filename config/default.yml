@@ -1,5 +1,11 @@
 ---
-  capture:
+general:
+    logs:
+        console:
+            level: "debug"
+            timestamp: true
+            colorize: true
+capture:
     proc:
       name: "ffmpeg"
       args:
@@ -12,19 +18,19 @@
         "f":   "nut"
         "y":   ""
         "-":   ""
-  encoder:
+encoder:
     outputOptions:
-      - "-profile:v main"
-      - "-preset medium"
-      - "-crf 29"
-      - "-tune zerolatency"
-      - "-g 30"
-      - "-ab 96000"
-      - "-ar 44100"
-      - "-ac 2"
-      - "-t 10"
-      - "-y"
-  playout:
+          - "-profile:v main"
+          - "-preset medium"
+          - "-crf 29"
+          - "-tune zerolatency"
+          - "-g 30"
+          - "-ab 96000"
+          - "-ar 44100"
+          - "-ac 2"
+          - "-t 10"
+          - "-y"
+playout:
     bmdplay:
         "f":            "pipe:0"
     ffmpeg:
@@ -35,6 +41,6 @@
             "c:a":      "pcm_s16le"
             "ar":       "48000"
             "f":        "nut"
-  browser:
+browser:
     enabled: true
     port: 4000

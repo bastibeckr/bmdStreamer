@@ -49,6 +49,12 @@
                                 ng-click="clickStart()">
                                 <i class="fa fa-play" ng-class="{'fa-stop': appData.encoder.running, 'fa-play': !appData.encoder.running}"></i> Stream {{ appData.encoder.running ? 'stoppen' : 'starten' }}
                             </button>
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                ng-click="clickSave()">
+                                <i class="fa fa-save"></i> Speichern
+                            </button>
                         </div><!-- /panel-body -->
                     </div><!-- /panel -->
 
@@ -140,7 +146,7 @@
             <div class="col-sm-12 debug-tabs" >
                 <tabset type="tabs">
                     <tab heading="Console">
-                    <pre id="console"><span ng-repeat="line in logs track by $index"><span ng-bind-html="line | ansiToHtml"></span><br /></span></pre>
+                    <pre id="console"><span ng-repeat="line in logs track by $index"><span ng-bind-html="line | ansiToHtml"></span></span></pre>
                     </tab>
                     <tab heading="Options"><pre>{{ appData | json }}</pre><pre>{{ settings | json }}</pre></tab>
                 </tabset>

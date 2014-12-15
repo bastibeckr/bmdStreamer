@@ -32,6 +32,59 @@ label.form-control{
 }
 
 #console{
+    font-weight: 200;
+    line-height: 1.5;
     background-color: #444;
     color: #ddd;
+}
+
+
+.ansi-black-fg{
+    color: #111111;
+}
+.ansi-red-fg{
+    color: #e7431d;
+}
+.ansi-green-fg{
+    color: #83ba40;
+}
+.ansi-yellow-fg{
+    color: #f6d200;
+}
+.ansi-blue-fg{
+    color: #1294d3;
+}
+.ansi-magenta-fg{
+    color: #c694d3;
+}
+.ansi-cyan-fg{
+    color: #7bc2c3;
+}
+.ansi-white-fg{
+    color: #ffffe7;
+}
+
+.ansi-bright-black-fg{
+    color: #333333;
+}
+.ansi-bright-red-fg{
+    color: #ff6c52;
+}
+.ansi-bright-green-fg{
+    color: #a3e750;
+}
+.ansi-bright-yellow-fg{
+    color: #f6de55;
+}
+.ansi-bright-blue-fg{
+    color: #2ebbff;
+}
+.ansi-bright-magenta-fg{
+    color: #f6d2ff;
+}
+.ansi-bright-cyan-fg{
+    color: #90e2e3;
+}
+.ansi-bright-white-fg{
+    color: #ffffff;
 }
