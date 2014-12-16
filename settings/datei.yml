@@ -1,8 +1,10 @@
 capture:
   _name: capture
   device: url
-  url: "rtmp://stream.sat1bayern.de/live/mp4:Sat1Schedule_01"
+  url: "rtmp://stream.sat1bayern.de:1935/live/mp4:Sat1Schedule_01"
 playout:
   _name: playout
   device: 0
-  format: hd-1080i-59-94
+  format: hd_1080p_25
+  url: "rtmp://studio2010:studio2010@stream.sat1bayern.de/live/step2e"
+  urlPreset: SD PAL (hq)

@@ -91,16 +91,29 @@
                                   <span class="input-group-addon"><span class="glyphicon glyphicon-cloud-upload"></span></span>
                             </div><!-- /input-group -->
 
-                            <div class="input-group">
+                            <div class="input-group" ng-show="settings.playout.device !== 'url'">
                                 <span class="input-group-addon">
                                   Format
                                 </span>
-                                <select class="form-control" ng-model="settings.playout.format" >
+                                <select class="form-control" ng-model="settings.playout.format">
                                     <option value="">Bitte auswählen</option>
-                                    <option  ng-repeat="format in appData.devices[settings.playout.device].formats track by format.index" value="{{format.slug}}">{{format.name}}</option>
+                                    <option ng-repeat="format in appData.devices[settings.playout.device].formats track by format.index" ng-value="format.slug">{{format.name}}</option>
+                                </select>
+
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-wrench"></span></span>
+                            </div><!-- /input-group -->
+
+                            <div class="input-group" ng-show="settings.playout.device === 'url'">
+                                <span class="input-group-addon">
+                                  Streaming-Preset
+                                </span>
+                                <select class="form-control" ng-model="settings.playout.urlPreset" >
+                                    <option value="">Bitte auswählen</option>
+                                    <option ng-repeat="preset in formatPresets track by preset.id" ng-value="preset.id">{{preset.name}}</option>
                                 </select>
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-wrench"></span></span>
-                            </div>
+                            </div><!-- /input-group -->
+
 
                         </div><!-- /panel-body -->
                     </div><!-- /panel -->

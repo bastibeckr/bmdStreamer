@@ -12,11 +12,11 @@ angular.module('streamCtrlControllers', ['ngRoute'])
     $scope.appData = {};
     $scope.logs = [];
     $scope.settings = {};
+    $scope.formatPresets = {};
 
     ctrlSocket.on('data', function(data){
         console.log('Got data from server', data, $scope.appData);
         angular.extend($scope.appData, data);
-
     });
 
 
@@ -26,6 +26,11 @@ angular.module('streamCtrlControllers', ['ngRoute'])
         angular.extend($scope.settings, data);
     });
 
+    ctrlSocket.on('presets-change', function(data){
+        // $scope.settings = data;
+        console.log('Got PRESETS from server', data );
+        angular.extend($scope.formatPresets, data);
+    });
 
     ctrlSocket.on('log', function(data){
         // var logData = data.chunk.split('\n');

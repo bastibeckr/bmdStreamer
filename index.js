@@ -1,34 +1,35 @@
-var modIntercept = require('./lib/intercept-stdout');
-var throughStream = modIntercept();
+var modIntercept    = require('./lib/intercept-stdout');
+var throughStream   = modIntercept();
+var EventEmitter    = require('events').EventEmitter;
+var fs              = require('fs');
+
+var debug           = require('debug')('sat1-node-stream:mainapp');
+
+var winston         = require('winston');
+var ffmpeg          = require('fluent-ffmpeg');
+var _               = require('lodash');
+var Q               = require('q');
+var spawn           = require('child_process').spawn;
+var config          = require('config');
 
 
-var debug = require('debug')('sat1-node-stream:mainapp');
-var EventEmitter = require('events').EventEmitter;
-var winston = require('winston');
-var fs = require('fs');
-var ffmpeg = require('fluent-ffmpeg');
-var _ = require('lodash');
-var Q = require('q');
-var spawn = require('child_process').spawn;
-var config = require('config');
+
+var modCapture      = require('./lib/capture');
+var modEncoder      = require('./lib/encode');
+var modBrowser      = require('./lib/webserver');
+var modPlayout      = require('./lib/playout');
+var modUtil         = require('./lib/util');
+var modSettings     = require('./lib/settings');
+var modStreaming    = require('./lib/streaming');
+
+modBrowser.start( throughStream );
 
 
-
-var modCapture = require('./lib/capture');
-var modEncoder = require('./lib/encode');
-var modBrowser = require('./lib/webserver');
-var modPlayout = require('./lib/playout');
-var util       = require('./lib/util');
-var modSettings = require('./lib/settings');
-
-modBrowser.start(throughStream);
+var logger = modUtil.getLogger('settings', { label: 'Main' });
 
 
-var logger = util.getLogger('settings', { label: 'Main' });
-
-
-modSettings.loadSettings('datei').then(function(data){
-    onSettingsChange(data);
+modSettings.loadSettings('datei').then( function( data ){
+    onSettingsChange( data );
 });
 
 modSettings.listSettingsFiles();
@@ -60,6 +61,10 @@ function makePreview() {
         function(data) {
             logger.debug('preview encoder: on success');
             fs.readFile('screenshot-2.png', function(err, buffer) {
+                if(err){
+                    logger.error('Error reading screenshot: %s', err.message);
+                    return;
+                }
                 var socketEventName = 'preview-img';
                 var base64Image = new Buffer(buffer, 'binary').toString('base64');
                 // modBrowser.events.emit('app-to-browser', 'preview-img', { image: true, buffer: buffer });
@@ -79,80 +84,79 @@ function makePreview() {
 
 
 
-function startStreaming() {
+// function startStreaming() {
 
-    var baseCommand, deferred, outputOptions, isUrl, isBmdPlay, bmdOptions, spawnArgs, playoutProcess, captureProc;
+//     var baseCommand, deferred, outputOptions, isUrl, isBmdPlay, bmdOptions, spawnArgs, playoutProcess, captureProc;
 
-    if (modEncoder.publicData.get('running')) {
-        logger.info('Will stop encoder now because Encoder is already running.');
-        modEncoder.stopEncoding();
-        return false;
-    }
+//     if ( modEncoder.encoderModel.get('running') ) {
+//         logger.info('Will stop encoder now because Encoder is already running.');
+//         modEncoder.stopEncoding();
+//         return false;
+//     }
 
-    isUrl = modCapture.captureModel.get('isUrl');
+//     isUrl = modCapture.captureModel.get('isUrl');
 
-    // Source is URL.
-    // No separate Capture process needed.
-    // FFMPEG can grab the URL and pipe it.
-    if( isUrl ){
-        logger.info('Start streaming: Source is URL.');
+//     // Source is URL.
+//     // No separate Capture process needed.
+//     // FFMPEG can grab the URL and pipe it.
+//     if( isUrl ){
+//         logger.info('Start streaming: Source is URL.');
 
-        deferred = Q.defer();
-        baseCommand = modEncoder.getBaseCommand(deferred);
-        outputOptions = modPlayout.ffmpegProcessModel.toJSON();
-        debug('Output options:', outputOptions);
-        baseCommand
-            .addInput(modCapture.captureModel.get('srcUrl'))
-            .addInputOptions(['-re'])
-            .addOutputOptions( util.paramsObjectToArray(outputOptions) );
+//         deferred = Q.defer();
+//         modEncoder.setupBaseCommand();
+//         baseCommand = modEncoder.currentCommand;
 
+//         outputOptions = modPlayout.ffmpegProcessModel.toJSON();
 
-    } else {
-        captureProc = modCapture.startCapture();
-        if (!captureProc.stdout) {
-            logger.warn('stop generation of preview because no capture has no stdout.');
-            return false;
-        }
-    }
+//         debug('Output options:', outputOptions);
 
-    isBmdPlay = modPlayout.playoutModel.get('isBmdPlay');
-
-    if(  isBmdPlay ){
-
-        logger.info('Start streaming: Target is BMD.');
-        playoutProcess = modPlayout.getBmdPlayProcess();
-
-        var ffstream = baseCommand.pipe();
+//         baseCommand
+//             .addInput( modCapture.captureModel.get('srcUrl') )
+//             .addInputOptions(['-re'])
+//             .addOutputOptions( modUtil.paramsObjectToArray(outputOptions) );
 
 
+//     } else {
+//         captureProc = modCapture.startCapture();
+//         if (!captureProc.stdout) {
+//             logger.warn('stop generation of preview because no capture has no stdout.');
+//             return false;
+//         }
+//     }
 
-        ffstream.on('data', function(chunk){
-            playoutProcess.stdin.write(chunk);
-        });
+//     isBmdPlay = modPlayout.playoutModel.get('isBmdPlay');
+
+//     if(  isBmdPlay ){
+
+//         logger.info('Start streaming: Target is BMD.');
+
+//         playoutProcess = modPlayout.getBmdPlayProcess();
+
+//         var ffstream = baseCommand.pipe();
+
+//         ffstream.on('data', function(chunk){
+//             playoutProcess.stdin.write(chunk);
+//         });
+
+//     } else {
+
+//         modEncoder.startEncoding( captureProc ).then(
+//             function( data ) {
+//                 logger.info('streaming encoder: on success');
+//                 captureProc.kill('SIGKILL');
+//             },
+//             function( err ) {
+//                 logger.error('streaming encoder: on error', err);
+//                 if( captureProc && captureProc.kill ){
+//                     captureProc.kill('SIGKILL');
+//                 }
+//             }
+//         ).done();
+
+//     }
 
 
-
-
-    } else {
-
-        modEncoder.startEncoding(captureProc).then(
-            function(data) {
-                logger.info('streaming encoder: on success');
-                captureProc.kill('SIGKILL');
-            },
-            function(err) {
-                logger.error('streaming encoder: on error', err);
-                if( captureProc && captureProc.kill ){
-                    captureProc.kill('SIGKILL');
-                }
-
-            }
-        ).done();
-
-    }
-
-
-}
+// }
 
 modBrowser.on('browser-to-app', function(data) {
     logger.debug('APP received web-control - event', data);
@@ -161,7 +165,7 @@ modBrowser.on('browser-to-app', function(data) {
             makePreview();
             break;
         case 'streaming':
-            startStreaming();
+            modStreaming.start();
             break;
         case 'settings-save':
             modSettings.saveSettings('datei');
