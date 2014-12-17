@@ -11,6 +11,10 @@ body {
     text-align: center;
 }
 
+.navbar-inverse{
+    background-color: #333;
+}
+
 .debug-tabs pre{
     height: 300px;
     max-height: 300px;

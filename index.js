@@ -47,7 +47,7 @@ function onSettingsChange(settings){
 }
 
 function makePreview() {
-
+    var deferred = Q.defer();
     var captureProc = modCapture.startCapture();
 
     if (!captureProc.stdout) {
@@ -57,7 +57,7 @@ function makePreview() {
 
     modCapture.ffprobe();
 
-    modEncoder.encodePreview(captureProc).then(
+    modEncoder.encodePreview( captureProc ).then(
         function(data) {
             logger.debug('preview encoder: on success');
             fs.readFile('screenshot-2.png', function(err, buffer) {
@@ -71,15 +71,18 @@ function makePreview() {
                 modBrowser.emit('app-to-browser', socketEventName, {
                     base64: 'data:image/png;base64,' + base64Image
                 });
+                deferred.resolve();
             });
             captureProc.kill('SIGKILL');
         },
         function(err) {
             logger.error('preview encoder: on error');
             captureProc.kill('SIGKILL');
+            deferred.reject(err);
         }
     ).done();
 
+    return deferred.promise;
 }
 
 
@@ -158,22 +161,50 @@ function makePreview() {
 
 // }
 
-modBrowser.on('browser-to-app', function(data) {
+
+/**
+ * [description]
+ * @param  {[type]} data [description]
+ * @param  {[type]} fn)  {               logger.debug('APP received web-control - event', data);    switch (data.action) {        case 'preview':            makePreview();            break;        case 'streaming':            modStreaming.start();            break;        case 'settings-save':            modSettings.saveSettings('datei');            break;        case 'settings-change':            onSettingsChange(data.settings);            break;    }} [description]
+ * @return {[type]}      [description]
+ */
+modBrowser.on('browser-to-app', function(data, fn) {
     logger.debug('APP received web-control - event', data);
     switch (data.action) {
         case 'preview':
-            makePreview();
+            makePreview().then(
+                function(result){
+                    if(typeof(fn) === 'function'){
+                        fn({'success': true, 'data': result });
+                    }
+                }
+            );
             break;
         case 'streaming':
-            modStreaming.start();
+            modStreaming.start().then(
+                function(result){
+                    if(typeof(fn) === 'function'){
+                        fn({'success': true, 'data': result });
+                    }
+                }
+            );
             break;
         case 'settings-save':
-            modSettings.saveSettings('datei');
+            modSettings.saveSettings('datei').then(
+                function(result){
+                    if(typeof(fn) === 'function'){
+                        fn({'success': true, 'data': result });
+                    }
+                }
+            );
             break;
         case 'settings-change':
             onSettingsChange(data.settings);
             break;
     }
+
+
+
 });
 
 

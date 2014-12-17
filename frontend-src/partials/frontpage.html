@@ -1,129 +1,164 @@
 <div class="container-fluid">
 <div class="starter-template">
 
-        <div class="row intro">
+      <!--   <div class="row intro">
             <h1>Live-Stream - Control</h1>
             <p class="lead">v1.0.0</p>
-        </div>
+        </div> -->
 
         <div class="row">
             <div class="col-sm-4">
 
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h4 class="panel-title">Status</h4></div>
-                    <div class="panel-body">
 
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                              Encoder
-                              <span class="label" ng-class="{'label-success': appData.encoder.running, 'label-default': !appData.encoder.running}">{{ appData.encoder.running ? 'läuft' : 'gestoppt' }}</span>
-                            </li>
-                            <li class="list-group-item">
-                              Capture-Prozess
-                              <span class="label" ng-class="{'label-success': appData.capture.running, 'label-default': !appData.capture.running}">{{ appData.capture.running ? 'läuft' : 'gestoppt' }}</span>
-                            </li>
-                            <li class="list-group-item">
-                              Playout
-                              <span class="label" ng-class="{'label-success': appData.playout.running, 'label-default': !appData.playout.running}">{{ appData.playout.running ? 'läuft' : 'gestoppt' }}</span>
-                            </li>
-                            <li class="list-group-item">Frames encoded: <code>{{ appData.encoder.progress.frames }}</code></li>
-                            <li class="list-group-item">Current FPS:    <code>{{ appData.encoder.progress.currentFps }}</code></li>
-                            <li class="list-group-item">Current kBps:   <code>{{ appData.encoder.progress.currentKbps }}</code></li>
-                            <li class="list-group-item">Target Size:    <code>{{ appData.encoder.progress.targetSize }}</code></li>
-                            <li class="list-group-item">Timestamp:      <code>{{ appData.encoder.progress.timemark }}</code></li>
-                        </ul>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><i class="fa fa-play"></i>&nbsp;Steuerung</h4>
+                    </div>
+                    <div class="panel-body">
+                        <button
+                            type="button"
+                            class="btn"
+                            ng-class="{'btn-danger': appData.encoder.running, 'btn-primary': !appData.encoder.running}"
+                            ng-click="clickStart()">
+                            <i class="fa fa-play" ng-class="{'fa-stop': appData.encoder.running, 'fa-play': !appData.encoder.running}"></i> Stream {{ appData.encoder.running ? 'stoppen' : 'starten' }}
+                        </button>
+                        <button type="button" class="btn btn-primary" ng-click="clickPreview()">
+                            <i class="fa fa-picture-o" ng-class="{'fa-spin fa-circle-o-notch': waitingForPreview, 'fa-picture-o': !waitingForPreview}"></i>
+                            Preview-Bild laden
+                        </button>
                     </div><!-- /panel-body -->
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                          Encoder
+                          <span class="label" ng-class="{'label-success': appData.encoder.running, 'label-default': !appData.encoder.running}">{{ appData.encoder.running ? 'läuft' : 'gestoppt' }}</span>
+                        </li>
+                        <li class="list-group-item">
+                          Capture-Prozess
+                          <span class="label" ng-class="{'label-success': appData.capture.running, 'label-default': !appData.capture.running}">{{ appData.capture.running ? 'läuft' : 'gestoppt' }}</span>
+                        </li>
+                        <li class="list-group-item">
+                          Playout
+                          <span class="label" ng-class="{'label-success': appData.playout.running, 'label-default': !appData.playout.running}">{{ appData.playout.running ? 'läuft' : 'gestoppt' }}</span>
+                        </li>
+                        <li class="list-group-item">Frames encoded: <code>{{ appData.encoder.progress.frames }}</code></li>
+                        <li class="list-group-item">Current FPS:    <code>{{ appData.encoder.progress.currentFps }}</code></li>
+                        <li class="list-group-item">Current kBps:   <code>{{ appData.encoder.progress.currentKbps }}</code></li>
+                        <li class="list-group-item">Target Size:    <code>{{ appData.encoder.progress.targetSize }}</code></li>
+                        <li class="list-group-item">Timestamp:      <code>{{ appData.encoder.progress.timemark }}</code></li>
+                    </ul>
+
                 </div><!-- /panel -->
 
-            </div>
+            </div><!-- /col-sm-4 -->
+
             <div class="col-sm-4">
 
                     <div class="panel panel-default">
-                        <div class="panel-heading"><h4 class="panel-title">Steuerung</h4></div>
-                        <div class="panel-body">
-                            <button type="button" class="btn btn-primary" ng-click="clickPreview()">Preview-Bild laden</button>
-                            <button
-                                type="button"
-                                class="btn"
-                                ng-class="{'btn-danger': appData.encoder.running, 'btn-primary': !appData.encoder.running}"
-                                ng-click="clickStart()">
-                                <i class="fa fa-play" ng-class="{'fa-stop': appData.encoder.running, 'fa-play': !appData.encoder.running}"></i> Stream {{ appData.encoder.running ? 'stoppen' : 'starten' }}
-                            </button>
-                            <button
-                                type="button"
-                                class="btn btn-primary"
-                                ng-click="clickSave()">
-                                <i class="fa fa-save"></i> Speichern
-                            </button>
-                        </div><!-- /panel-body -->
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><i class="fa fa-cog"></i>&nbsp;Einstellungen</h4>
+                        </div>
+
+                        <ul class="list-group">
+
+                            <li class="list-group-item">
+                                <h4> Eingänge / Capture</h4>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                      <input type="radio" name="input-device" ng-model="settings.capture.device" id="radio-select-playout-url" value="url" >
+                                    </span>
+                                    <input type="text" class="form-control" placeholder="rtmp(s)://" ng-model="settings.capture.url">
+                                    <span class="input-group-addon">
+                                        URL <span class="fa fa-cloud-download"></span>
+                                    </span>
+                                </div><!-- /input-group -->
+
+
+
+                            </li><!-- /list-group-item -->
+
+
+
+
+                            <li class="list-group-item">
+
+                                <h4>Ausgang / Playout</h4>
+                                <div class="input-group" ng-repeat="avDevice in appData.devices track by avDevice.slug">
+                                        <span class="input-group-addon">
+                                        <input type="radio" name="playout-device"  ng-model="$parent.settings.playout.device" id="settings-playout-device-{{avDevice.slug}}" ng-value="{{ avDevice.index }}" >
+                                        </span>
+                                        <label class="form-control"  for="settings-playout-device-{{avDevice.slug}}"><span>{{avDevice.name}}</span></label>
+                                        <span class="input-group-addon">
+                                          BMD <span class="fa fa-video-camera"></span>
+                                        </span>
+                                </div><!-- /input-group -->
+
+                                <div class="input-group">
+                                      <span class="input-group-addon">
+                                        <input type="radio" name="playout-device" ng-model="settings.playout.device" id="radio-select-playout-url" value="url" >
+                                      </span>
+                                      <input type="text" class="form-control" placeholder="rtmp(s)://" ng-model="settings.playout.url">
+                                      <span class="input-group-addon">
+                                        URL <span class="fa fa-cloud-upload"></span>
+                                      </span>
+                                </div><!-- /input-group -->
+
+                            </li><!-- /list-group-item -->
+
+                            <li class="list-group-item">
+
+                                <div class="input-group" ng-show="settings.playout.device !== 'url'">
+                                    <span class="input-group-addon">
+                                      Format
+                                    </span>
+                                    <select class="form-control" ng-model="settings.playout.format">
+                                        <option value="">Bitte auswählen</option>
+                                        <option ng-repeat="format in appData.devices[settings.playout.device].formats track by format.slug" ng-value="{{ format.slug }}">{{format.name}}</option>
+                                    </select>
+                                    <span class="input-group-addon"><span class="fa fa-cogs"></span></span>
+                                </div><!-- /input-group -->
+
+                                <div class="input-group" ng-show="settings.playout.device === 'url'">
+                                    <span class="input-group-addon">
+                                      Streaming-Preset
+                                    </span>
+                                    <select class="form-control" ng-model="settings.playout.urlPreset" >
+                                        <option value="">Bitte auswählen</option>
+                                        <option ng-repeat="preset in formatPresets track by preset.id" ng-value="preset.id">{{preset.name}}</option>
+                                    </select>
+                                    <span class="input-group-addon"><span class="fa fa-cogs"></span></span>
+                                </div><!-- /input-group -->
+
+
+                            </li><!-- /list-group-item -->
+
+                            <li class="list-group-item">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    ng-click="clickSave()">
+                                    <i class="fa" ng-class="{'fa-spin fa-circle-o-notch': savingSettings, 'fa-save': !savingSettings}"></i> Speichern
+                                </button>
+
+                            </li><!-- /list-group-item -->
+
+                        </ul><!-- /list-group -->
+
+
                     </div><!-- /panel -->
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><h4 class="panel-title">Eingänge / Capture</h4></div>
-                        <div class="panel-body">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                  <input type="radio" name="input-device" ng-model="settings.capture.device" id="radio-select-playout-url" value="url" >
-                                </span>
-                                <input type="text" class="form-control" placeholder="rtmp(s)://" ng-model="settings.capture.url">
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-cloud-download"></span></span>
-                            </div><!-- /input-group -->
-                        </div><!-- /panel-body -->
-                    </div><!-- /panel -->
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><h4 class="panel-title">Ausgang / Playout</h4></div>
-                        <div class="panel-body">
-
-                            <div class="input-group" ng-repeat="avDevice in appData.devices track by device.index">
-                                  <span class="input-group-addon">
-                                    <input type="radio" name="playout-device"  ng-model="$parent.settings.playout.device" id="settings-playout-device-{{avDevice.slug}}" ng-value="avDevice.index" >
-                                  </span>
-                                  <label class="form-control"  for="settings-playout-device-{{avDevice.slug}}"><span>{{avDevice.name}}</span></label>
-                                  <span class="input-group-addon"><span class="glyphicon glyphicon-facetime-video"></span></span>
-                            </div>
-
-                            <div class="input-group">
-                                  <span class="input-group-addon">
-                                    <input type="radio" name="playout-device" ng-model="settings.playout.device" id="radio-select-playout-url" value="url" >
-                                  </span>
-                                  <input type="text" class="form-control" placeholder="rtmp(s)://" ng-model="settings.playout.url">
-                                  <span class="input-group-addon"><span class="glyphicon glyphicon-cloud-upload"></span></span>
-                            </div><!-- /input-group -->
-
-                            <div class="input-group" ng-show="settings.playout.device !== 'url'">
-                                <span class="input-group-addon">
-                                  Format
-                                </span>
-                                <select class="form-control" ng-model="settings.playout.format">
-                                    <option value="">Bitte auswählen</option>
-                                    <option ng-repeat="format in appData.devices[settings.playout.device].formats track by format.index" ng-value="format.slug">{{format.name}}</option>
-                                </select>
-
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-wrench"></span></span>
-                            </div><!-- /input-group -->
-
-                            <div class="input-group" ng-show="settings.playout.device === 'url'">
-                                <span class="input-group-addon">
-                                  Streaming-Preset
-                                </span>
-                                <select class="form-control" ng-model="settings.playout.urlPreset" >
-                                    <option value="">Bitte auswählen</option>
-                                    <option ng-repeat="preset in formatPresets track by preset.id" ng-value="preset.id">{{preset.name}}</option>
-                                </select>
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-wrench"></span></span>
-                            </div><!-- /input-group -->
 
 
-                        </div><!-- /panel-body -->
-                    </div><!-- /panel -->
 
 
-            </div>
+
+            </div><!-- /col-sm-4 -->
+
 
             <div class="col-sm-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h4 class="panel-title">Status</h4></div>
+                    <div class="panel-heading"><h4 class="panel-title"><i class="fa fa-info"></i>&nbsp;Info</h4></div>
                     <div class="panel-body">
                         <tabset>
                             <tab heading="Vorschau">
@@ -150,7 +185,7 @@
 
 
 
-        </div>
+        </div><!-- row -->
 
 
 
@@ -164,11 +199,12 @@
                     <tab heading="Options"><pre>{{ appData | json }}</pre><pre>{{ settings | json }}</pre></tab>
                 </tabset>
             </div>
-        </div>
+
+        </div><!-- row -->
 
         <div class="row">
           <div class="col-sm-6"></div>
-        </div>
+        </div><!-- row -->
 
 </div>
 </div>

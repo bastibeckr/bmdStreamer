@@ -50,7 +50,11 @@ angular.module('streamCtrlControllers', ['ngRoute'])
 
 
     $scope.clickPreview = function(){
-        ctrlSocket.emit('browser-to-app', {action: 'preview'});
+        $scope.waitingForPreview = true;
+        ctrlSocket.emit('browser-to-app', {action: 'preview'}, function(){
+            $scope.waitingForPreview = false;
+            console.log('BROWSER TO APP Callback', arguments);
+        });
     };
 
     $scope.clickStart = function(){
@@ -60,7 +64,9 @@ angular.module('streamCtrlControllers', ['ngRoute'])
     };
 
     $scope.clickSave = function(){
+        $scope.savingSettings = true;
         ctrlSocket.emit('browser-to-app', {action: 'settings-save'}, function(){
+            $scope.savingSettings = false;
             console.log('BROWSER TO APP Callback', arguments);
         });
     }
