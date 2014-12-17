@@ -14,6 +14,14 @@ angular.module('streamCtrlControllers', ['ngRoute'])
     $scope.settings = {};
     $scope.formatPresets = {};
 
+    $scope.inputModelOptions = {
+        updateOn: 'blur',
+        debounce: {
+            'default': 500,
+            'blur': 0
+        }
+    };
+
     ctrlSocket.on('data', function(data){
         console.log('Got data from server', data, $scope.appData);
         angular.extend($scope.appData, data);

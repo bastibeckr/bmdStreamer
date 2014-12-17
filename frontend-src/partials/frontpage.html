@@ -15,17 +15,23 @@
                         <h4 class="panel-title"><i class="fa fa-play"></i>&nbsp;Steuerung</h4>
                     </div>
                     <div class="panel-body">
-                        <button
-                            type="button"
-                            class="btn"
-                            ng-class="{'btn-danger': appData.encoder.running, 'btn-primary': !appData.encoder.running}"
-                            ng-click="clickStart()">
-                            <i class="fa fa-play" ng-class="{'fa-stop': appData.encoder.running, 'fa-play': !appData.encoder.running}"></i> Stream {{ appData.encoder.running ? 'stoppen' : 'starten' }}
-                        </button>
-                        <button type="button" class="btn btn-primary" ng-click="clickPreview()">
-                            <i class="fa fa-picture-o" ng-class="{'fa-spin fa-circle-o-notch': waitingForPreview, 'fa-picture-o': !waitingForPreview}"></i>
-                            Preview-Bild laden
-                        </button>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-block"
+                                    ng-class="{'btn-danger': appData.encoder.running, 'btn-primary': !appData.encoder.running}"
+                                    ng-click="clickStart()">
+                                    <i class="fa fa-play" ng-class="{'fa-stop': appData.encoder.running, 'fa-play': !appData.encoder.running}"></i> Stream {{ appData.encoder.running ? 'stoppen' : 'starten' }}
+                                </button>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <button type="button" class="btn btn-primary btn-sm btn-block" ng-click="clickPreview()">
+                                    <i class="fa fa-picture-o" ng-class="{'fa-spin fa-circle-o-notch': waitingForPreview, 'fa-picture-o': !waitingForPreview}"></i>
+                                    Preview-Bild laden
+                                </button>
+                            </div>
+                        </div>
                     </div><!-- /panel-body -->
                     <ul class="list-group">
                         <li class="list-group-item">
@@ -65,9 +71,9 @@
 
                                 <div class="input-group">
                                     <span class="input-group-addon">
-                                      <input type="radio" name="input-device" ng-model="settings.capture.device" id="radio-select-playout-url" value="url" >
+                                      <input type="radio" name="input-device" ng-model="settings.capture.device" id="radio-select-capture-url" value="url" >
                                     </span>
-                                    <input type="text" class="form-control" placeholder="rtmp(s)://" ng-model="settings.capture.url">
+                                    <input type="text" class="form-control" placeholder="rtmp(s)://" ng-model="settings.capture.url" ng-model-options="inputModelOptions">
                                     <span class="input-group-addon">
                                         URL <span class="fa fa-cloud-download"></span>
                                     </span>
@@ -97,7 +103,7 @@
                                       <span class="input-group-addon">
                                         <input type="radio" name="playout-device" ng-model="settings.playout.device" id="radio-select-playout-url" value="url" >
                                       </span>
-                                      <input type="text" class="form-control" placeholder="rtmp(s)://" ng-model="settings.playout.url">
+                                      <input type="text" class="form-control" placeholder="rtmp(s)://" ng-model="settings.playout.url"  ng-model-options="inputModelOptions">
                                       <span class="input-group-addon">
                                         URL <span class="fa fa-cloud-upload"></span>
                                       </span>
@@ -133,13 +139,18 @@
                             </li><!-- /list-group-item -->
 
                             <li class="list-group-item">
-
-                                <button
-                                    type="button"
-                                    class="btn btn-primary"
-                                    ng-click="clickSave()">
-                                    <i class="fa" ng-class="{'fa-spin fa-circle-o-notch': savingSettings, 'fa-save': !savingSettings}"></i> Speichern
-                                </button>
+                                <div class="row">
+                                    <div class="col-md-6"></div>
+                                    <div class="col-md-6">
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary btn-sm btn-block"
+                                            ng-click="clickSave()">
+                                            <i class="fa" ng-class="{'fa-spin fa-circle-o-notch': savingSettings, 'fa-save': !savingSettings}"></i>&nbsp;
+                                            Speichern
+                                        </button>
+                                    </div>
+                                </div>
 
                             </li><!-- /list-group-item -->
 
