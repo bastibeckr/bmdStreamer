@@ -113,7 +113,7 @@
                                     </span>
                                     <select class="form-control" ng-model="settings.playout.format">
                                         <option value="">Bitte auswählen</option>
-                                        <option ng-repeat="format in appData.devices[settings.playout.device].formats track by format.slug" ng-value="{{ format.slug }}">{{format.name}}</option>
+                                        <option ng-repeat="format in appData.devices[settings.playout.device].formats track by format.slug" value="{{ format.slug }}" ng-selected="{{ $parent.settings.playout.format == format.slug}}">{{format.name}}</option>
                                     </select>
                                     <span class="input-group-addon"><span class="fa fa-cogs"></span></span>
                                 </div><!-- /input-group -->

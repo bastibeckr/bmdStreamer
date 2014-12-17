@@ -5,6 +5,6 @@ capture:
 playout:
   _name: playout
   device: 0
-  format: NTSC
+  format: hd_1080i_59_94
   url: "rtmp://studio2010:studio2010@stream.sat1bayern.de/live/step2e"
   urlPreset: SD PAL (hq)
